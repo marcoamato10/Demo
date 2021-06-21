@@ -11,4 +11,10 @@ public interface PersonRepository extends MongoRepository<Person, String> {
     public List<Person> findAllBySex(Sex sex);
 
     Person findBySex(Sex sex);
+
+    Person findByCF(String cF);
+
+    boolean existsByCF(String cF);
+
+    Person deleteByCF(String cF);
 }

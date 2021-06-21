@@ -4,10 +4,8 @@ spring:
       database:
         uri: mongodb://localhost:27017/demodb
         port: 27017
- devtools:
-   restart:
-     enabled: true
+        auto-index-generation: true
 logging:
   level:
     root: INFO
-//nell'uri si mette mongodb://localhost:portaEsterna/nomedb
+#nell'uri si mette mongodb://localhost:portaEsterna/nomedb

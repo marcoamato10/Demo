@@ -2,6 +2,7 @@ package it.hyaholding.demo.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Data
@@ -14,6 +15,8 @@ public class Person {
     private String name;
     private String surname;
     private String address;
+    @Indexed(unique = true)
+    private String cF;
     private Sex sex;
 
     public String getFullName() {

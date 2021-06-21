@@ -33,14 +33,23 @@ public class PersonController {
         return personService.checkerAddPerson(person);
     }
 
-    /*@PostMapping("/updateperson")
-    public ResponseEntity<Person> updatePerson(Person person){
+    @PutMapping("/updateperson")
+    public ResponseEntity<Person> updatePerson(Person person) {
         return personService.checkerUpdatePerson(person);
     }
 
-    @GetMapping("deleteperson")
-    public ResponseEntity<Person> deletePerson(Person person){
-        return personService.checkerDeletePerson(person);
-    }*/
+    @DeleteMapping("/deleteperson")
+    public ResponseEntity<Person> deletePerson(@RequestParam String cF) {
+        return personService.checkerDeletePerson(cF);
+    }
 
+    @GetMapping("/findall")
+    public List<Person> findAll() {
+        return personService.getAll();
+    }
+
+    @GetMapping("/findbycf")
+    public ResponseEntity<Person> findByCF(@RequestParam String cF) {
+        return personService.checkCF(cF);
+    }
 }
