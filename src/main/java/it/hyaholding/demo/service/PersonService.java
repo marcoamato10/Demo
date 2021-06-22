@@ -97,75 +97,75 @@ public class PersonService {
         }
     }
 
-        public Person updatePerson(Person person) throws FailedToAddException, CFNotFoundException {
-            if (personRepository.existsByFiscalCode(person.getFiscalCode())) {
-                Person temp = personRepository.findByFiscalCode(person.getFiscalCode());
-                if (person.getName() != null)
-                    temp.setName(person.getName());
-                if (person.getSurname() != null)
-                    temp.setSurname(person.getSurname());
-                if (person.getAddress() != null)
-                    temp.setAddress(person.getAddress());
-                if (person.getSex() != null)
-                    temp.setSex(person.getSex());
-                if (person.getName() == null || person.getSurname() == null || person.getAddress() == null || person.getFiscalCode() == null || person.getSex() == null) {
-                    throw new FailedToAddException("Non puoi lasciare campi vuoti");
-                } else {
-                    return personRepository.save(temp);
-                }
+    public Person updatePerson(Person person) throws FailedToAddException, CFNotFoundException {
+        if (personRepository.existsByFiscalCode(person.getFiscalCode())) {
+            Person temp = personRepository.findByFiscalCode(person.getFiscalCode());
+            if (person.getName() != null)
+                temp.setName(person.getName());
+            if (person.getSurname() != null)
+                temp.setSurname(person.getSurname());
+            if (person.getAddress() != null)
+                temp.setAddress(person.getAddress());
+            if (person.getSex() != null)
+                temp.setSex(person.getSex());
+            if (person.getName() == null || person.getSurname() == null || person.getAddress() == null || person.getFiscalCode() == null || person.getSex() == null) {
+                throw new FailedToAddException("Non puoi lasciare campi vuoti");
             } else {
-                throw new CFNotFoundException("Codice fiscale inesistente");
+                return personRepository.save(temp);
             }
-        }
-
-        public ResponseEntity<Person> checkerUpdatePerson (Person person){
-            try {
-                return ResponseEntity.ok(updatePerson(person));
-            } catch (FailedToAddException f) {
-                String errorMessage = new StringBuilder().append("Modifica annullata: ").append(f.getMessage()).toString();
-                log.warning(errorMessage);
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            } catch (CFNotFoundException b) {
-                String errorMessageThree = new StringBuilder().append("Codice fiscale non valido: ").append(b.getMessage()).toString();
-                log.warning(errorMessageThree);
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
-        }
-
-        public Person deleteByCf (String fiscalCode) throws CFNotFoundException {
-            if (personRepository.existsByFiscalCode(fiscalCode)) {
-                return personRepository.deleteByFiscalCode(fiscalCode);
-            } else {
-                throw new CFNotFoundException("Codice fiscale inesistente");
-            }
-        }
-
-        public ResponseEntity<Person> checkerDeletePerson (String fiscalCode){
-            try {
-                return ResponseEntity.ok(deleteByCf(fiscalCode));
-            } catch (CFNotFoundException b) {
-                log.warning(b.getMessage());
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
-        }
-
-        public List<Person> getAll () {
-            return personRepository.findAll();
-        }
-
-        public Person getByCf (String fiscalCode) throws CFNotFoundException {
-            if (personRepository.existsByFiscalCode(fiscalCode)) {
-                return personRepository.findByFiscalCode(fiscalCode);
-            } else
-                throw new CFNotFoundException("Codice fiscale inesistente");
-        }
-
-        public ResponseEntity<Person> checkFiscalCode (String fiscalCode){
-            try {
-                return ResponseEntity.ok(getByCf(fiscalCode));
-            } catch (CFNotFoundException b) {
-                log.warning(b.getMessage());
-                return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-            }
+        } else {
+            throw new CFNotFoundException("Codice fiscale inesistente");
         }
     }
+
+    public ResponseEntity<Person> checkerUpdatePerson(Person person) {
+        try {
+            return ResponseEntity.ok(updatePerson(person));
+        } catch (FailedToAddException f) {
+            String errorMessage = new StringBuilder().append("Modifica annullata: ").append(f.getMessage()).toString();
+            log.warning(errorMessage);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (CFNotFoundException b) {
+            String errorMessageThree = new StringBuilder().append("Codice fiscale non valido: ").append(b.getMessage()).toString();
+            log.warning(errorMessageThree);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
+    public Person deleteByFiscalCode(String fiscalCode) throws CFNotFoundException {
+        if (personRepository.existsByFiscalCode(fiscalCode)) {
+            return personRepository.deleteByFiscalCode(fiscalCode);
+        } else {
+            throw new CFNotFoundException("Codice fiscale inesistente");
+        }
+    }
+
+    public ResponseEntity<Person> checkerDeletePerson(String fiscalCode) {
+        try {
+            return ResponseEntity.ok(deleteByFiscalCode(fiscalCode));
+        } catch (CFNotFoundException b) {
+            log.warning(b.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+
+    public List<Person> getAll() {
+        return personRepository.findAll();
+    }
+
+    public Person getByFiscalCode(String fiscalCode) throws CFNotFoundException {
+        if (personRepository.existsByFiscalCode(fiscalCode)) {
+            return personRepository.findByFiscalCode(fiscalCode);
+        } else
+            throw new CFNotFoundException("Codice fiscale inesistente");
+    }
+
+    public ResponseEntity<Person> checkFiscalCode(String fiscalCode) {
+        try {
+            return ResponseEntity.ok(getByFiscalCode(fiscalCode));
+        } catch (CFNotFoundException b) {
+            log.warning(b.getMessage());
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+    }
+}
