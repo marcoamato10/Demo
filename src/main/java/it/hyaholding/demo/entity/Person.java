@@ -16,7 +16,7 @@ public class Person {
     private String surname;
     private String address;
     @Indexed(unique = true)
-    private String cF;
+    private String fiscalCode;
     private Sex sex;
 
     public String getFullName() {

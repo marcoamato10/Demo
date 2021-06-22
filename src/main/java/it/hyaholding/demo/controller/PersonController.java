@@ -33,14 +33,14 @@ public class PersonController {
         return personService.checkerAddPerson(person);
     }
 
-    @PutMapping("/updateperson")
+    @PutMapping ("/updateperson")
     public ResponseEntity<Person> updatePerson(Person person) {
         return personService.checkerUpdatePerson(person);
     }
 
     @DeleteMapping("/deleteperson")
-    public ResponseEntity<Person> deletePerson(@RequestParam String cF) {
-        return personService.checkerDeletePerson(cF);
+    public ResponseEntity<Person> deletePerson(@RequestParam String fiscalCode) {
+        return personService.checkerDeletePerson(fiscalCode);
     }
 
     @GetMapping("/findall")
@@ -48,8 +48,8 @@ public class PersonController {
         return personService.getAll();
     }
 
-    @GetMapping("/findbycf")
-    public ResponseEntity<Person> findByCF(@RequestParam String cF) {
-        return personService.checkCF(cF);
+    @GetMapping("/findbyfiscalcode")
+    public ResponseEntity<Person> findByCF(@RequestParam String fiscalCode) {
+        return personService.checkFiscalCode(fiscalCode);
     }
 }

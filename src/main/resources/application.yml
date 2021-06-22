@@ -1,10 +1,9 @@
 spring:
   data:
     mongodb:
-      database:
-        uri: mongodb://localhost:27017/demodb
-        port: 27017
-        auto-index-generation: true
+        uri: mongodb://localhost:27017/ozigiggin
+        database: ozigiggin
+        auto-index-creation: true
 logging:
   level:
     root: INFO

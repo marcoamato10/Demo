@@ -8,13 +8,13 @@ import java.util.List;
 
 public interface PersonRepository extends MongoRepository<Person, String> {
 
-    public List<Person> findAllBySex(Sex sex);
+    List<Person> findAllBySex(Sex sex);
 
     Person findBySex(Sex sex);
 
-    Person findByCF(String cF);
+    Person findByFiscalCode(String fiscalCode);
 
-    boolean existsByCF(String cF);
+    boolean existsByFiscalCode(String fiscalCode);
 
-    Person deleteByCF(String cF);
+    Person deleteByFiscalCode(String fiscalCode);
 }
