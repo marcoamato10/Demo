@@ -2,10 +2,7 @@ package it.hyaholding.demo.service;
 
 import it.hyaholding.demo.entity.Person;
 import it.hyaholding.demo.entity.Sex;
-import it.hyaholding.demo.exception.CFNotFoundException;
-import it.hyaholding.demo.exception.FailedCFException;
-import it.hyaholding.demo.exception.FailedToAddException;
-import it.hyaholding.demo.exception.PermissionDeniedException;
+import it.hyaholding.demo.exception.*;
 import it.hyaholding.demo.repository.PersonRepository;
 import lombok.extern.java.Log;
 import org.springframework.http.HttpStatus;
@@ -24,55 +21,57 @@ public class PersonService {
         this.personRepository = personRepository;
     }
 
-    public List<Person> getAllBySexAfterEighteen(Sex sex) throws PermissionDeniedException {
-        LocalTime now = LocalTime.now();
-        LocalTime limit = now.withHour(18).withMinute(0).withSecond(0);
-        if (now.isAfter(limit)) {
-            return personRepository.findAllBySex(sex);
-        } else {
-            throw new PermissionDeniedException("Non sono le 18:00");
-        }
-    }
 
-    public ResponseEntity<List<Person>> checkerFindAllBySex(Sex sex) {
-        try {
-            return ResponseEntity.ok(this.getAllBySexAfterEighteen(sex));
-        } catch (PermissionDeniedException e) {
-            log.warning(new StringBuilder()
-                    .append("Mi disp sono ancora le ")
-                    .append(LocalTime.now().minusSeconds(LocalTime.now().getSecond()).minusNanos(LocalTime.now().getNano()))
-                    .append(" sks >w<")
-                    .toString());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-    }
+//    public List<Person> getAllBySexAfterEighteen(Sex sex) throws PermissionDeniedException {
+//        LocalTime now = LocalTime.now();
+//        LocalTime limit = now.withHour(18).withMinute(0).withSecond(0);
+//        if (now.isAfter(limit)) {
+//            return personRepository.findAllBySex(sex);
+//        } else {
+//            throw new PermissionDeniedException("Non sono le 18:00");
+//        }
+//    }
+//
+//    public ResponseEntity<List<Person>> checkerFindAllBySex(Sex sex) {
+//        try {
+//            return ResponseEntity.ok(this.getAllBySexAfterEighteen(sex));
+//        } catch (PermissionDeniedException e) {
+//            log.warning(new StringBuilder()
+//                    .append("Mi disp sono ancora le ")
+//                    .append(LocalTime.now().minusSeconds(LocalTime.now().getSecond()).minusNanos(LocalTime.now().getNano()))
+//                    .append(" sks >w<")
+//                    .toString());
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+//        }
+//    }
+//
+//    public Person getBySexAfterEighteen(Sex sex) throws PermissionDeniedException {
+//        LocalTime now = LocalTime.now();
+//        LocalTime limit = now.withHour(17).withMinute(0).withSecond(0);
+//        if (now.isAfter(limit)) {
+//            return personRepository.findBySex(sex);
+//        } else {
+//            throw new PermissionDeniedException("Non sono ancora le 18");
+//        }
+//    }
+//
+//    public ResponseEntity<Person> checkerFindBySex(Sex sex) {
+//        try {
+//            return ResponseEntity.ok(this.getBySexAfterEighteen(sex));
+//        } catch (PermissionDeniedException e) {
+//            log.warning(new StringBuilder()
+//                    .append("Mi disp sono ancora le ")
+//                    .append(LocalTime.now().minusSeconds(LocalTime.now().getSecond()).minusNanos(LocalTime.now().getNano()))
+//                    .append(" sks >w<")
+//                    .toString());
+//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+//        }
+//    }
 
-    public Person getBySexAfterEighteen(Sex sex) throws PermissionDeniedException {
-        LocalTime now = LocalTime.now();
-        LocalTime limit = now.withHour(17).withMinute(0).withSecond(0);
-        if (now.isAfter(limit)) {
-            return personRepository.findBySex(sex);
-        } else {
-            throw new PermissionDeniedException("Non sono ancora le 18");
-        }
-    }
 
-    public ResponseEntity<Person> checkerFindBySex(Sex sex) {
-        try {
-            return ResponseEntity.ok(this.getBySexAfterEighteen(sex));
-        } catch (PermissionDeniedException e) {
-            log.warning(new StringBuilder()
-                    .append("Mi disp sono ancora le ")
-                    .append(LocalTime.now().minusSeconds(LocalTime.now().getSecond()).minusNanos(LocalTime.now().getNano()))
-                    .append(" sks >w<")
-                    .toString());
-            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-        }
-    }
-
-    public Person addPerson(Person person) throws FailedToAddException, FailedCFException {
-        if (person.getName() == null || person.getSurname() == null || person.getAddress() == null || person.getFiscalCode() == null || person.getSex() == null) {
-            throw new FailedToAddException("Non puoi lasciare campi vuoti");
+    public Person addPerson(Person person) throws NullPersonException, FailedToAddException, FailedCFException {
+        if (person==null||person.getName() == null || person.getSurname() == null || person.getAddress() == null || person.getFiscalCode() == null || person.getSex() == null) {
+            throw new NullPersonException("Non puoi lasciare campi vuoti");
         } else if (personRepository.existsByFiscalCode(person.getFiscalCode())) {
             throw new FailedToAddException("Codice fiscale già esistente");
         } else if (!person.getFiscalCode().matches("[A-Z]{6}[0-9]{2}[A-Z][0-9]{2}[A-Z][0-9]{3}[A-Z]$")) {
@@ -94,10 +93,14 @@ public class PersonService {
             String errorMessageTwo = new StringBuilder().append("Codice fiscale non valido: ").append(c.getMessage()).toString();
             log.warning(errorMessageTwo);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        } catch (NullPersonException n) {
+            String errorMessageThree = new StringBuilder().append("Errore nell'inserimento: ").append(n.getMessage()).toString();
+            log.warning(errorMessageThree);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
         }
     }
 
-    public Person updatePerson(Person person) throws FailedToAddException, CFNotFoundException {
+    public Person updatePerson(Person person) throws CFNotFoundException, NullPersonException {
         if (personRepository.existsByFiscalCode(person.getFiscalCode())) {
             Person temp = personRepository.findByFiscalCode(person.getFiscalCode());
             if (person.getName() != null)
@@ -109,7 +112,7 @@ public class PersonService {
             if (person.getSex() != null)
                 temp.setSex(person.getSex());
             if (person.getName() == null || person.getSurname() == null || person.getAddress() == null || person.getFiscalCode() == null || person.getSex() == null) {
-                throw new FailedToAddException("Non puoi lasciare campi vuoti");
+                throw new NullPersonException("Non puoi lasciare campi vuoti");
             } else {
                 return personRepository.save(temp);
             }
@@ -121,7 +124,7 @@ public class PersonService {
     public ResponseEntity<Person> checkerUpdatePerson(Person person) {
         try {
             return ResponseEntity.ok(updatePerson(person));
-        } catch (FailedToAddException f) {
+        } catch (NullPersonException f) {
             String errorMessage = new StringBuilder().append("Modifica annullata: ").append(f.getMessage()).toString();
             log.warning(errorMessage);
             return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
@@ -134,7 +137,8 @@ public class PersonService {
 
     public Person deleteByFiscalCode(String fiscalCode) throws CFNotFoundException {
         if (personRepository.existsByFiscalCode(fiscalCode)) {
-            return personRepository.deleteByFiscalCode(fiscalCode);
+            personRepository.deleteByFiscalCode(fiscalCode);
+            return null; //personRepository.deleteByFiscalCode(fiscalCode);
         } else {
             throw new CFNotFoundException("Codice fiscale inesistente");
         }

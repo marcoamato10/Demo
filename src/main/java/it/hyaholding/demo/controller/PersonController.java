@@ -18,15 +18,15 @@ public class PersonController {
         this.personService = personService;
     }
 
-    @GetMapping("/findallbysex")
-    public ResponseEntity<List<Person>> findAllBySex(@RequestParam Sex sex) {
-        return personService.checkerFindAllBySex(sex);
-    }
-
-    @GetMapping("/findbysex")
-    public ResponseEntity<Person> findBySex(@RequestParam Sex sex) {
-        return personService.checkerFindBySex(sex);
-    }
+//    @GetMapping("/findallbysex")
+//    public ResponseEntity<List<Person>> findAllBySex(@RequestParam Sex sex) {
+//        return personService.checkerFindAllBySex(sex);
+//    }
+//
+//    @GetMapping("/findbysex")
+//    public ResponseEntity<Person> findBySex(@RequestParam Sex sex) {
+//        return personService.checkerFindBySex(sex);
+//    }
 
     @PostMapping("/addperson")
     public ResponseEntity<Person> addPerson(Person person) {
