@@ -22,51 +22,7 @@ public class PersonService {
     }
 
 
-//    public List<Person> getAllBySexAfterEighteen(Sex sex) throws PermissionDeniedException {
-//        LocalTime now = LocalTime.now();
-//        LocalTime limit = now.withHour(18).withMinute(0).withSecond(0);
-//        if (now.isAfter(limit)) {
-//            return personRepository.findAllBySex(sex);
-//        } else {
-//            throw new PermissionDeniedException("Non sono le 18:00");
-//        }
-//    }
-//
-//    public ResponseEntity<List<Person>> checkerFindAllBySex(Sex sex) {
-//        try {
-//            return ResponseEntity.ok(this.getAllBySexAfterEighteen(sex));
-//        } catch (PermissionDeniedException e) {
-//            log.warning(new StringBuilder()
-//                    .append("Mi disp sono ancora le ")
-//                    .append(LocalTime.now().minusSeconds(LocalTime.now().getSecond()).minusNanos(LocalTime.now().getNano()))
-//                    .append(" sks >w<")
-//                    .toString());
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//        }
-//    }
-//
-//    public Person getBySexAfterEighteen(Sex sex) throws PermissionDeniedException {
-//        LocalTime now = LocalTime.now();
-//        LocalTime limit = now.withHour(17).withMinute(0).withSecond(0);
-//        if (now.isAfter(limit)) {
-//            return personRepository.findBySex(sex);
-//        } else {
-//            throw new PermissionDeniedException("Non sono ancora le 18");
-//        }
-//    }
-//
-//    public ResponseEntity<Person> checkerFindBySex(Sex sex) {
-//        try {
-//            return ResponseEntity.ok(this.getBySexAfterEighteen(sex));
-//        } catch (PermissionDeniedException e) {
-//            log.warning(new StringBuilder()
-//                    .append("Mi disp sono ancora le ")
-//                    .append(LocalTime.now().minusSeconds(LocalTime.now().getSecond()).minusNanos(LocalTime.now().getNano()))
-//                    .append(" sks >w<")
-//                    .toString());
-//            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
-//        }
-//    }
+
 
 
     public Person addPerson(Person person) throws NullPersonException, FailedToAddException, FailedCFException {
